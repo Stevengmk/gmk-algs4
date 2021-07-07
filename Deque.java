@@ -57,16 +57,16 @@ public class Deque<Item> implements Iterable<Item> {
     {
         if (item == null)
             throw new IllegalArgumentException("item not null !");
+
+        Node<Item> newFirst = new Node<Item>(item);
         if (isEmpty())
         {
-            head = new Node<Item>(item);
+            head = newFirst;
             tail = head;
         } else {
-            Node<Item> oldHead = head;
-            Node<Item> first = new Node<Item>(item);
-            head = first;
-            first.next = oldHead;
-            oldHead.pre = head;
+            head.pre = newFirst;
+            newFirst.next = head;
+            head = newFirst;
         }
         size++;
     }
@@ -77,16 +77,16 @@ public class Deque<Item> implements Iterable<Item> {
     {
         if (item == null)
             throw new IllegalArgumentException("item not null !");
+        Node<Item> newTail = new Node<>(item);
+
         if (isEmpty())
         {
-            head = new Node<Item>(item);
-            tail = head;
+            tail = newTail;
+            head = tail;
         } else {
-            Node<Item> oldTail = tail;
-            Node<Item> end = new Node<Item>(item);
-            oldTail.next = end;
-            tail = end;
-            end.pre = oldTail;
+            newTail.pre = tail;
+            tail.next = newTail;
+            tail = newTail;
         }
         size++;
     }
@@ -98,14 +98,14 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException("deque is null !");
         Item ret = head.item;
-        size--;
-        // newHead may be null
+
         Node<Item> newHead = head.next;
-        if (newHead != null)
-            newHead.pre = null;
+        if (newHead == null)
+        {
+            tail = newHead;
+        }
         head = newHead;
-        if (isEmpty())
-            tail = head;
+        size--;
         return ret;
     }
 
@@ -116,14 +116,15 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException("deque is null !");
         Item ret = tail.item;
-        // newTail may be null 这种写法是否合适
         Node<Item> newTail = tail.pre;
-        if (newTail != null)
-            newTail.next = null;
         tail = newTail;
-        size--;
-        if (isEmpty())
+        if (newTail == null)
+        {
             head = tail;
+        } else {
+            tail.next = null;
+        }
+        size--;
         return ret;
     }
 
@@ -171,19 +172,37 @@ public class Deque<Item> implements Iterable<Item> {
         // deque.addFirst(4);
         // StdOut.println(deque.size());
         // deque.addFirst(3);
-        // deque.addLast(6);
-        // deque.addLast(7);
+        deque.addLast(6);
+        deque.addLast(7);
         // deque.addFirst(2);
         // deque.removeFirst();
         // StdOut.println(deque.size());
         // deque.removeLast();
         // StdOut.println(deque.isEmpty());
         deque.addLast(1);
-        deque.removeLast();
+        deque.addLast(7);
+        // deque.addLast(5);
+        // deque.removeLast();
+        StdOut.println("1:");
         for (int i : deque)
         {
             StdOut.println(i);
         }
+        // deque.removeFirst();
+        deque.removeLast();
+        // deque.removeFirst();
+        // deque.removeFirst();
+        StdOut.println("2:");
+        for (int i : deque)
+        {
+            StdOut.println(i);
+        }
+        // deque.addLast(6);
+        // StdOut.println("3:");
+        // for (int i : deque)
+        // {
+        //     StdOut.println(i);
+        // }
     }
 
 }

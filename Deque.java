@@ -98,14 +98,15 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException("deque is null !");
         Item ret = head.item;
-
-        Node<Item> newHead = head.next;
-        if (newHead == null)
-        {
-            tail = newHead;
-        }
-        head = newHead;
         size--;
+        if (isEmpty())
+        {
+            head = null;
+            tail = null;
+        } else {
+            head = head.next;
+            head.pre = null;
+        }
         return ret;
     }
 
@@ -116,15 +117,15 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException("deque is null !");
         Item ret = tail.item;
-        Node<Item> newTail = tail.pre;
-        tail = newTail;
-        if (newTail == null)
+        size--;
+        if (isEmpty())
         {
-            head = tail;
+            tail = null;
+            head = null;
         } else {
+            tail = tail.pre;
             tail.next = null;
         }
-        size--;
         return ret;
     }
 
